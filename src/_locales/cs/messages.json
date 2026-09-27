@@ -59,11 +59,20 @@
   "backupOnExit": {
     "message": "Záloha při ukončení"
   },
+  "backupOverdue.label": {
+    "message": "Záloha je zpožděná.\n\nChcete provést zálohu nyní, nebo\npočkat do naplánovaného času?\n\nDalší záloha: "
+  },
   "backupSettings": {
     "message": "Nastavení zálohování"
   },
+  "backupStartingIn.label": {
+    "message": "Zálohování začne za 15 sekund…"
+  },
   "backupTab": {
     "message": "Plánování zálohování"
+  },
+  "backupTime.label": {
+    "message": "Doba zálohování"
   },
   "backupType": {
     "message": "Zálohujte obsah"
@@ -496,6 +505,9 @@
   "formatWarningImport": {
     "message": "Pokud použijete tento formát, nebude možné importovat exportované zprávy.\nOpravdu chcete pokračovat?\n",
     "src": "mboximport"
+  },
+  "HeaderDateFormat.label": {
+    "message": "Formát data v záhlaví"
   },
   "importDone": {
     "message": "Import Hotovo",

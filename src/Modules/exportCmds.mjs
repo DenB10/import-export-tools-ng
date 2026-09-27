@@ -34,14 +34,14 @@
 
 import { logging, log } from "./loggingWext.mjs";
 import { createExportTask } from "./importExportTasks.mjs";
-import * as prefs from "./prefCmds.mjs";
+import { prefCmds } from "./prefCmds.mjs";
 import { strftime } from "./strftime.mjs";
 import * as ui from "./ui.mjs";
 import { Ci } from "/Modules/CiConstants.js";
 
 
-const os = navigator.platform.toLowerCase();
-const osPathSeparator = os.includes("win")
+const os = navigator.userAgent;
+const osPathSeparator = os.includes("Windows")
   ? "\\"
   : "/";
 
@@ -51,9 +51,9 @@ export async function exportFolders(ctxEvent, tab, functionParams) {
   gAbort = false;
 
   try {
-    logging.init({ logTypes: await prefs.getPref("debug.logTypes") });
+    logging.init({ logTypes: await prefCmds.getPref("debug.logTypes") });
 
-    const notificationsForExpFolders = await prefs.getPref("ui.notificationsForExpFolders");
+    const notificationsForExpFolders = await prefCmds.getPref("ui.exportStatus.folders.useNotificationsNoWindow");
 
     log("msgs msgs2", "Start Export folders\nFolders:")
 
@@ -79,11 +79,11 @@ export async function exportFolders(ctxEvent, tab, functionParams) {
     let usePredefinedExportDir;
     let exportDir;
     if (functionParams.expMethod == "selectedMsgs") {
-      usePredefinedExportDir = await prefs.getPref("exportMSG.use_dir");
-      exportDir = await prefs.getPref("exportMSG.dir");
+      usePredefinedExportDir = await prefCmds.getPref("export.general.useDefaultSelectedMsgsExportDir");
+      exportDir = await prefCmds.getPref("export.general.defaultSelectedMsgsExportDir");
     } else {
-      usePredefinedExportDir = await prefs.getPref("exportEML.use_dir");
-      exportDir = await prefs.getPref("exportEML.dir");
+      usePredefinedExportDir = await prefCmds.getPref("export.general.useDefaultFolderExportDir");
+      exportDir = await prefCmds.getPref("export.general.defaultFolderExportDir");
     }
     if (usePredefinedExportDir && exportDir != "") {
       expTask.generalConfig.exportDirectory = exportDir;
@@ -315,82 +315,102 @@ export async function exportSelectedMsgs(ctxEvent, tab, functionParams) {
   try {
     gAbort = false;
 
-    logging.init({ logTypes: await prefs.getPref("debug.logTypes") });
+    logging.init({ logTypes: await prefCmds.getPref("debug.logTypes") });
 
     log("msgs msgs2", "Start Export selected messages\nFolder:")
 
     log("test", ctxEvent, "ctxEvent")
     log("test", tab, "tab")
     log("test", ctxEvent?.displayedFolder, "displayedFolder")
-    let currentFolder = ctxEvent?.displayedFolder;
 
-    if (currentFolder == undefined) {
-      console.error("IETNG: displayedFolder is undefined, trying mailTabs");
-      let currentMailtab = await messenger.mailTabs.getCurrent();
-      if (currentMailtab && currentMailtab.displayedFolder) {
-        console.warn("IETNG: Using mailTabs.displayedFolder - Please Report!");
-        currentFolder = currentMailtab.displayedFolder;
-        let rv = await browser.AsyncPrompts.asyncAlert(browser.i18n.getMessage("warning.msg"), `ctxEvent.displayedFolder undefined using mailTabs.displayedFolder `);;
+    const notificationsForExpSelMsgs = await prefCmds.getPref("ui.exportStatus.selectedMsgs.useNotificationsNoWindow");
 
-      } else if (!currentMailtab) {
-        console.log("currentMailtab is undefined, giving up")
-        let rv = await browser.AsyncPrompts.asyncAlert(browser.i18n.getMessage("warning.msg"), `Both ctxEvent.displayedFolder and\nmailTabs.displayedFolder undefined \nGiving up`);;
-        try {
-          browser.ExportMessages.onExpUpdate.removeListener(_updateListener);
-        } catch (ex) { }
-        return;
-      }
-    }
+    let folderSet;
+    let totalFolderCount;
+    let selectedMsgs;
+    let selMsgCnt;
 
-    const notificationsForExpSelMsgs = await prefs.getPref("ui.notificationsForExpSelMsgs");
+    // handle message pane, tab and window pageUrl context
 
-    // only displayedFolder
-    let folderSet = await _getFolderSet([currentFolder], functionParams);
-    let totalFolderCount = folderSet.length;
+    if (ctxEvent.pageUrl) {
+      log("msgs msgs2", "Using pageUrl context");
 
-    log("msgs msgs2", ` Folder: ${folderSet[0].exportPath}`)
-
-    // Cruddy way to get selected msg cnt
-    // We have to workaround an error with mailTabs.getSelectedMessages()
-    // intermittently and not that rarely, it will return 
-    // a zero length messages list. This appears only happen when 
-    // a single message is selected. We therefore assume a zero length 
-    // is an error and use ctxEvent.selectedMessages from the menu operation.
-    // Because there will be no iteration over the list, we we can
-    // reuse it in _msgIterateBatch
-
-    let selMsgCnt = (await messenger.mailTabs.getSelectedMessages())?.messages.length;
-    let selectedMsgs = await messenger.mailTabs.getSelectedMessages()
-
-    console.log("selected msgs", selectedMsgs)
-    if (!selMsgCnt) {
-      console.log("use ctxEvent.selectedMessages");
-      folderSet[0].totalMsgCount = ctxEvent.selectedMessages.messages.length;
-      selectedMsgs = ctxEvent.selectedMessages;
+      selMsgCnt = 1;
+      let displayedMsg = await messenger.messageDisplay.getDisplayedMessage(tab.id);
+      selectedMsgs = { id: null, messages: [displayedMsg] };
+      folderSet = await _getFolderSet([displayedMsg.folder], functionParams);
+      totalFolderCount = 1;
+      folderSet[0].totalMsgCount = 1;
     } else {
-      console.log("use getSelectedMessages");
-      folderSet[0].totalMsgCount = 0;
+      log("msgs msgs2", "Using ctxExent.selectedMessages or mailTabs.getSelectedMessages");
 
-      let msgListPage;
-      do {
-        if (!msgListPage) {
-          msgListPage = await messenger.mailTabs.getSelectedMessages()
-          //msgListPage = ctxEvent.selectedMessages;
-          folderSet[0].totalMsgCount = msgListPage.messages.length;
-          console.log(msgListPage)
-        } else {
-          msgListPage = await messenger.messages.continueList(msgListPage.id);
-          folderSet[0].totalMsgCount += msgListPage.messages.length;
-          //console.log(msgListPage)
+      let currentFolder = ctxEvent?.displayedFolder;
+
+      if (currentFolder == undefined) {
+        console.error("IETNG: displayedFolder is undefined, trying mailTabs");
+        let currentMailtab = await messenger.mailTabs.getCurrent();
+        if (currentMailtab && currentMailtab.displayedFolder) {
+          console.warn("IETNG: Using mailTabs.displayedFolder - Please Report!");
+          currentFolder = currentMailtab.displayedFolder;
+          let rv = await browser.AsyncPrompts.asyncAlert(browser.i18n.getMessage("warning.msg"), `ctxEvent.displayedFolder undefined using mailTabs.displayedFolder `);;
+
+        } else if (!currentMailtab) {
+          console.log("currentMailtab is undefined, giving up")
+          let rv = await browser.AsyncPrompts.asyncAlert(browser.i18n.getMessage("warning.msg"), `Both ctxEvent.displayedFolder and\nmailTabs.displayedFolder undefined \nGiving up`);;
+          try {
+            browser.ExportMessages.onExpUpdate.removeListener(_updateListener);
+          } catch (ex) { }
+          return;
         }
-      } while (msgListPage.id);
+      }
+
+
+      // only displayedFolder
+      folderSet = await _getFolderSet([currentFolder], functionParams);
+      totalFolderCount = folderSet.length;
+
+      log("msgs msgs2", ` Folder: ${folderSet[0].exportPath}`)
+
+      // Cruddy way to get selected msg cnt
+      // We have to workaround an error with mailTabs.getSelectedMessages()
+      // intermittently and not that rarely, it will return 
+      // a zero length messages list. This appears only happen when 
+      // a single message is selected. We therefore assume a zero length 
+      // is an error and use ctxEvent.selectedMessages from the menu operation.
+      // Because there will be no iteration over the list, we we can
+      // reuse it in _msgIterateBatch
+
+      selMsgCnt = (await messenger.mailTabs.getSelectedMessages())?.messages.length;
+      selectedMsgs = await messenger.mailTabs.getSelectedMessages()
+
+      if (!selMsgCnt) {
+        //console.log("use ctxEvent.selectedMessages");
+        folderSet[0].totalMsgCount = ctxEvent.selectedMessages.messages.length;
+        selectedMsgs = ctxEvent.selectedMessages;
+      } else {
+        //console.log("use getSelectedMessages");
+        folderSet[0].totalMsgCount = 0;
+
+        let msgListPage;
+        do {
+          if (!msgListPage) {
+            msgListPage = await messenger.mailTabs.getSelectedMessages()
+            //msgListPage = ctxEvent.selectedMessages;
+            folderSet[0].totalMsgCount = msgListPage.messages.length;
+          } else {
+            msgListPage = await messenger.messages.continueList(msgListPage.id);
+            folderSet[0].totalMsgCount += msgListPage.messages.length;
+            //console.log(msgListPage)
+          }
+        } while (msgListPage.id);
+      }
+
+      if (ctxEvent.selectedMessages) {
+        selectedMsgs = ctxEvent.selectedMessages;
+      }
+      // end 
     }
 
-    if (ctxEvent.selectedMessages) {
-      selectedMsgs = ctxEvent.selectedMessages;
-    }
-
-    selectedMsgs
     let totalMsgCount = 0;
 
     folderSet.forEach(folder => {
@@ -400,8 +420,8 @@ export async function exportSelectedMsgs(ctxEvent, tab, functionParams) {
     var expTask = await createExportTask(functionParams, ctxEvent, folderSet);
 
     // get export directory
-    let useSelectedMsgsExportDir = await prefs.getPref("exportMSG.use_dir");
-    let selectedMsgsExportDir = await prefs.getPref("exportMSG.dir");
+    let useSelectedMsgsExportDir = await prefCmds.getPref("export.general.useDefaultSelectedMsgsExportDir");
+    let selectedMsgsExportDir = await prefCmds.getPref("export.general.defaultSelectedMsgsExportDir");
     if (useSelectedMsgsExportDir && selectedMsgsExportDir != "") {
       expTask.generalConfig.exportDirectory = selectedMsgsExportDir;
     } else {
@@ -884,8 +904,8 @@ async function _getprocessedMsg(expTask, msgId, msg) {
             }
             htmlParts.push({ contentType: part.contentType, body: part?.body });
           }
-          if (expTask.expType != "pdf" && part.contentType == "text/plain" && part?.body) {
-            textParts.push({ contentType: part.contentType, body: part?.body });
+          if (expTask.expType != "pdf" && part.contentType == "text/plain") {
+            textParts.push({ contentType: part.contentType, body: part?.body || "" });
           }
 
           if (part.headers["content-disposition"] && part.headers["content-disposition"][0].includes("inline")) {
@@ -903,7 +923,6 @@ async function _getprocessedMsg(expTask, msgId, msg) {
           }
 
           if (part.headers["content-disposition"] && part.headers["content-disposition"][0].includes("attachment")) {
-
             let attachmentBody = await browser.messages.getAttachmentFile(msgId, part.partName);
             attachmentParts.push({ partType: "attachment", contentType: part.contentType, partBody: attachmentBody, name: part.name });
           }
@@ -1005,19 +1024,19 @@ async function _processBodyForHTML(expTask, msg, msgBody, msgBodyType, extraHead
       // wrap body with <html><body>
       msgBody = `<html>\n<head><title>${extraHeaders.fullSubject}</title></head>\n<body>\n${msgBody}\n</body>\n</html>`;
     }
-    
+
     // add title if missing 
     if (!/<TITLE[^>]*>/i.test(msgBody)) {
       // check if we have a head block
       if (!/<HEAD[^>]*>/i.test(msgBody)) {
         // add head and title
-        msgBody = msgBody.replace(/(<HTML[^>]*?>)/i,`$1<head><title>${extraHeaders.fullSubject}</title></head>\n`);        
+        msgBody = msgBody.replace(/(<HTML[^>]*?>)/i, `$1<head><title>${extraHeaders.fullSubject}</title></head>\n`);
       } else {
         // head, but no title
-        msgBody = msgBody.replace(/(<HEAD[^>]*?>)/i,`$1\n<title>${extraHeaders.fullSubject}</title>\n`);
+        msgBody = msgBody.replace(/(<HEAD[^>]*?>)/i, `$1\n<title>${extraHeaders.fullSubject}</title>\n`);
       }
     }
-    
+
     return _insertHdrTable(expTask, msg, msgBody, msgBodyType, extraHeaders);
   }
   // we have text/plain
@@ -1046,7 +1065,7 @@ async function _processBodyForPlaintext(expTask, msg, msgBody, msgBodyType, extr
 
 async function _insertHdrTable(expTask, msg, msgBody, msgBodyType, extraHeaders) {
 
-  let author = msg.author.replaceAll('"',"");
+  let author = msg.author.replaceAll('"', "");
   let date = strftime.strftime(expTask.hdrDateFormat, new Date(msg.date));
   let recipients;
   if (msg.recipients == []) {
@@ -1070,7 +1089,7 @@ async function _insertHdrTable(expTask, msg, msgBody, msgBodyType, extraHeaders)
 
   let replyTo;
   if (extraHeaders["reply-to"] && extraHeaders["reply-to"][0]) {
-   replyTo = extraHeaders["reply-to"][0].replaceAll('"', '');
+    replyTo = extraHeaders["reply-to"][0].replaceAll('"', '');
   }
 
   // header localization 

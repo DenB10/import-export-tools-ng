@@ -59,11 +59,20 @@
   "backupOnExit": {
     "message": "Biztonsági mentés a kilépéskor"
   },
+  "backupOverdue.label": {
+    "message": "A biztonsági mentés esedékes.\n\nSzeretne most biztonsági mentést készíteni, vagy\nmegvárni az ütemezett időpontot?\n\nKövetkező biztonsági mentés: "
+  },
   "backupSettings": {
     "message": "Biztonsági mentés beállításai"
   },
+  "backupStartingIn.label": {
+    "message": "A biztonsági mentés 15 másodperc múlva elindul…"
+  },
   "backupTab": {
     "message": "Biztonségi mentés ütemezése"
+  },
+  "backupTime.label": {
+    "message": "Biztonsági mentési idő"
   },
   "backupType": {
     "message": "Biztonsági mentés tartalma"
@@ -499,6 +508,9 @@
   "formatWarningImport": {
     "message": "Ha ezt a formátumot használja, nem lesz lehetséges az exportált üzenetek importálása.\nBiztosan folytatja?\n",
     "src": "mboximport"
+  },
+  "HeaderDateFormat.label": {
+    "message": "Fejléc dátumformátuma"
   },
   "importDone": {
     "message": "Az importálás kész",

@@ -59,11 +59,20 @@
   "backupOnExit": {
     "message": "Kopia zapasowa przy wyjściu"
   },
+  "backupOverdue.label": {
+    "message": "Kopia zapasowa jest spóźniona.\n\nCzy chcesz wykonać kopię zapasową teraz,\nczy poczekać do zaplanowanego czasu?\n\nNastępna kopia zapasowa: "
+  },
   "backupSettings": {
     "message": "Ustawienia tworzenia kopii zapasowej"
   },
+  "backupStartingIn.label": {
+    "message": "Tworzenie kopii zapasowej rozpocznie się za 15 sekund…"
+  },
   "backupTab": {
     "message": "Harmonogram"
+  },
+  "backupTime.label": {
+    "message": "Czas tworzenia kopii zapasowej"
   },
   "backupType": {
     "message": "Zawartość kopii zapasowej"
@@ -499,6 +508,9 @@
   "formatWarningImport": {
     "message": "If you use this format, it will not be possible to import the exported messages.\nDo you want to continue?\n",
     "src": "mboximport"
+  },
+  "HeaderDateFormat.label": {
+    "message": "Format daty nagłówka"
   },
   "importDone": {
     "message": "Importuj gotowe",

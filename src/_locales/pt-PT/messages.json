@@ -59,11 +59,20 @@
   "backupOnExit": {
     "message": "Backup na saída"
   },
+  "backupOverdue.label": {
+    "message": "Há um backup atrasado.\n\nDeseja realizar um backup agora ou\naguardar até o horário agendado?\n\nPróximo backup: "
+  },
   "backupSettings": {
     "message": "Definições da cópia de segurança"
   },
+  "backupStartingIn.label": {
+    "message": "O backup começará em 15 segundos…"
+  },
   "backupTab": {
     "message": "Agendamento da cópia de segurança"
+  },
+  "backupTime.label": {
+    "message": "Tempo de backup"
   },
   "backupType": {
     "message": "Cópia de segurança do conteúdo"
@@ -499,6 +508,9 @@
   "formatWarningImport": {
     "message": "Se você usar este formato, não será possível importar as mensagens exportadas. \\ NTem certeza de que deseja continuar? \\ N",
     "src": "mboximport"
+  },
+  "HeaderDateFormat.label": {
+    "message": "Formato de data do cabeçalho"
   },
   "importDone": {
     "message": "Importação concluída",

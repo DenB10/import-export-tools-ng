@@ -1,20 +1,19 @@
 {
   "manifest_version": 2,
   "name": "__MSG_extensionName__",
-  "version": "15.0.1",
+  "version": "15.0.4-b1",
   "description": "__MSG_extensionDescription__",
   "author": "Christopher Leidigh",
   "applications": {
     "gecko": {
       "id": "ImportExportToolsNG@cleidigh.kokkini.net",
-      "strict_min_version": "140.0",
-      "strict_max_version": "153.*"
+      "strict_min_version": "153.0",
+      "strict_max_version": "159.*"
     }
   },
   "browser_action": {
     "default_icon": "chrome/content/mboximport/icons/import-export-tools-ng-icon-64px.png",
-    "default_title": "ImportExport",
-    "default_popup": "chrome/content/dummy.html"
+    "default_title": "ImportExport"
   },
   "experiment_apis": {
     "WindowListener": {
@@ -109,7 +108,9 @@
     "accountsRead",
     "messagesImport",
     "notifications",
-    "messagesMove"
+    "messagesMove",
+    "storage",
+    "alarms"
   ],
   "background": {
     "scripts": [

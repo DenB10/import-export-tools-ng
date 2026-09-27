@@ -59,11 +59,20 @@
   "backupOnExit": {
     "message": "Backup beim Beenden"
   },
+  "backupOverdue.label": {
+    "message": "Eine Datensicherung ist überfällig.\n\nMöchten Sie jetzt eine Datensicherung durchführen oder\nbis zum geplanten Zeitpunkt warten?\n\nNächste Datensicherung: "
+  },
   "backupSettings": {
     "message": "Backup-Einstellungen"
   },
+  "backupStartingIn.label": {
+    "message": "Die Datensicherung startet in 15 Sekunden…"
+  },
   "backupTab": {
     "message": "Backup-Planung"
+  },
+  "backupTime.label": {
+    "message": "Sicherungszeit"
   },
   "backupType": {
     "message": "Backup-Inhalt"
@@ -499,6 +508,9 @@
   "formatWarningImport": {
     "message": "Wenn Sie dieses Format verwenden, ist es nicht möglich, die exportierten Nachrichten zu importieren.\nMöchten Sie fortfahren?",
     "src": "mboximport"
+  },
+  "HeaderDateFormat.label": {
+    "message": "Datumsformat in der Kopfzeile"
   },
   "importDone": {
     "message": "Import abgeschlossen",

@@ -17,6 +17,8 @@
 // mboxImportExport.mjs
 // convert for esm modules
 
+var messengerWindow = Services.wm.getMostRecentWindow("mail:3pane");
+
 var window = Cc["@mozilla.org/appshell/window-mediator;1"]
   .getService(Ci.nsIWindowMediator)
   .getMostRecentWindow("mail:3pane");
@@ -44,6 +46,10 @@ var { parse5322 } = ChromeUtils.importESModule("chrome://mboximport/content/mbox
 var { strftime } = ChromeUtils.importESModule("chrome://mboximport/content/mboximport/modules/strftime.mjs");
 
 Services.scriptloader.loadSubScript("chrome://mboximport/content/mboximport/importMboxModule-5.js", window.ietngAddon, "UTF-8");
+
+var { IETStoragePrefs } = ChromeUtils.importESModule("chrome://mboximport/content/mboximport/modules/IETStoragePrefs.mjs?"
+	+ ietngExtension.manifest.version + messengerWindow.ietngAddon.dateForDebugging);
+
 console.log("IETNG: mboximportExport.mjs -v16");
 
 export var mboxImportExport = {
@@ -402,19 +408,19 @@ export var mboxImportExport = {
   },
 
   exportFoldersToMbox: async function (rootMsgFolder, destPath, inclSubfolders, flattenSubfolders) {
-
+    
     let useMboxExt = false;
-    if ((!inclSubfolders || flattenSubfolders) && this.IETprefs.getBoolPref("extensions.importexporttoolsng.export.mbox.use_mboxext")) {
+    if ((!inclSubfolders || flattenSubfolders) && (await IETStoragePrefs.getBoolPref("extensions.importexporttoolsng.export.mbox.use_mboxext"))) {
       useMboxExt = true;
     }
-
+    
     let rootFolderName;
     if (!rootMsgFolder.localizedName) {
       rootFolderName = rootMsgFolder.prettyName;
     } else {
       rootFolderName = rootMsgFolder.localizedName;
     }
-    let uniqueName = ietngUtils.createUniqueFolderName(rootFolderName, destPath, false, useMboxExt);
+    let uniqueName = await ietngUtils.createUniqueFolderName(rootFolderName, destPath, false, useMboxExt);
     let fullFolderPath = PathUtils.join(destPath, uniqueName);
 
     ietngUtils.createStatusLine(window);
@@ -437,7 +443,9 @@ export var mboxImportExport = {
 
     // wait before removing status text, should be delayed removal
     await new Promise(r => window.setTimeout(r, 2000));
+    try {
     window.document.getElementById("ietngStatusText").remove();
+    } catch (ex) {}
   },
 
   exportSubFolders: async function (msgFolder, fullSbdDirPath) {
@@ -449,7 +457,7 @@ export var mboxImportExport = {
       } else {
         subMsgFolderName = subMsgFolder.localizedName;
       }
-      let uniqueName = ietngUtils.createUniqueFolderName(subMsgFolderName, fullSbdDirPath, false, false);
+      let uniqueName = await ietngUtils.createUniqueFolderName(subMsgFolderName, fullSbdDirPath, false, false);
 
       let fullSubMsgFolderPath = PathUtils.join(fullSbdDirPath, uniqueName);
       await this.buildAndExportMbox(subMsgFolder, fullSubMsgFolderPath);
@@ -470,7 +478,7 @@ export var mboxImportExport = {
       } else {
         subMsgFolderName = subMsgFolder.localizedName;
       }
-      let uniqueName = ietngUtils.createUniqueFolderName(subMsgFolderName, fullFolderPath, false, useMboxExt);
+      let uniqueName = await ietngUtils.createUniqueFolderName(subMsgFolderName, fullFolderPath, false, useMboxExt);
       let fullSubMsgFolderPath = PathUtils.join(fullFolderPath, uniqueName);
 
       await this.buildAndExportMbox(subMsgFolder, fullSubMsgFolderPath);

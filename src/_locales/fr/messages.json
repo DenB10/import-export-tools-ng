@@ -59,11 +59,20 @@
   "backupOnExit": {
     "message": "À la fermeture"
   },
+  "backupOverdue.label": {
+    "message": "Une sauvegarde est en suspens.\n\nCliquez sur [OK] pour effectuer une sauvegarde maintenant.\nCliquez sur [Annuler] pour attendre le moment prévu.\n\nProchaine sauvegarde : "
+  },
   "backupSettings": {
     "message": "Paramètres de sauvegarde"
   },
+  "backupStartingIn.label": {
+    "message": "La sauvegarde débutera dans 15 secondes…"
+  },
   "backupTab": {
     "message": "Sauvegarde"
+  },
+  "backupTime.label": {
+    "message": "Heure de sauvegarde "
   },
   "backupType": {
     "message": "Contenu de la sauvegarde "
@@ -499,6 +508,9 @@
   "formatWarningImport": {
     "message": "Si vous utilisez ce format, il ne sera pas possible d’importer les messages exportés.\nSouhaitez-vous continuer ?\n",
     "src": "mboximport"
+  },
+  "HeaderDateFormat.label": {
+    "message": "Format de date de l’en-tête "
   },
   "importDone": {
     "message": "Importation effectuée",

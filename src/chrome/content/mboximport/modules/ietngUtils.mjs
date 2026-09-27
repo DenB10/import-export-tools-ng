@@ -16,6 +16,8 @@
 
 // ietngUtils.mjs - esm conversion
 
+var messengerWindow = Services.wm.getMostRecentWindow("mail:3pane");
+
 var { AppConstants } = ChromeUtils.importESModule("resource://gre/modules/AppConstants.sys.mjs");
 var Ietng_ESM = parseInt(AppConstants.MOZ_APP_VERSION, 10) >= 128;
 
@@ -31,13 +33,13 @@ var { MailServices } = Ietng_ESM
   ? ChromeUtils.importESModule("resource:///modules/MailServices.sys.mjs")
   : ChromeUtils.import("resource:///modules/MailServices.jsm");
 
+  var { IETStoragePrefs } = ChromeUtils.importESModule("chrome://mboximport/content/mboximport/modules/IETStoragePrefs.mjs?"
+	+ ietngExtension.manifest.version + messengerWindow.ietngAddon.dateForDebugging);
+
 
 export var ietngUtils = {
 
   _self: this,
-
-  IETprefs: Cc["@mozilla.org/preferences-service;1"]
-    .getService(Ci.nsIPrefBranch),
 
   top: Cc["@mozilla.org/appshell/window-mediator;1"]
     .getService(Ci.nsIWindowMediator)
@@ -168,7 +170,7 @@ export var ietngUtils = {
       this.top.document.getElementById("ietngStatusText").setAttribute("value", text);
       this.top.document.getElementById("ietngStatusText").innerText = text;
 
-      var delay = this.IETprefs.getIntPref("extensions.importexporttoolsng.delay.clean_statusbar");
+      var delay = 5000;
       if (statusDelay) {
         delay = statusDelay;
       }
@@ -220,8 +222,8 @@ export var ietngUtils = {
     return str;
   },
 
-  nameToAcii: function (str) {
-    if (!this.IETprefs.getBoolPref("extensions.importexporttoolsng.export.filenames_toascii")) {
+  nameToAcii: async function (str) {
+    if (!(await IETStoragePrefs.getBoolPref("extensions.importexporttoolsng.export.filenames_toascii"))) {
       str = str.replace(/[\x00-\x19]/g, "_");
       // Allow ',' and single quote character which is valid
       return str.replace(/[\/\\:<>*\?\"\|]/g, "_");
@@ -233,7 +235,7 @@ export var ietngUtils = {
     return str;
   },
 
-  createUniqueFolderName: function (foldername, destDirPath, structure, useMboxExt) {
+  createUniqueFolderName: async function (foldername, destDirPath, structure, useMboxExt) {
 
     // for mbox extension we have to gyrate bit
 
@@ -241,14 +243,14 @@ export var ietngUtils = {
       .createInstance(Ci.nsIFile);
     destdirNSIFILE.initWithPath(destDirPath);
 
-    var overwrite = this.IETprefs.getBoolPref("extensions.importexporttoolsng.export.overwrite");
+    var overwrite = await IETStoragePrefs.getBoolPref("extensions.importexporttoolsng.export.overwrite");
     var index = 0;
     var nameIndex = "";
     var NSclone = destdirNSIFILE.clone();
 
     // Change unsafe chars for filenames with underscore
     foldername = this.sanitizeFileOrFolderName(foldername);
-    foldername = this.nameToAcii(foldername);
+    foldername = await this.nameToAcii(foldername);
 
     if (useMboxExt) {
       foldername += ".mbox";

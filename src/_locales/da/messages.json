@@ -59,11 +59,20 @@
   "backupOnExit": {
     "message": "Sikkerhedskopier ved afslutning"
   },
+  "backupOverdue.label": {
+    "message": "Tidspunktet for en sikkerhedskopiering er overskredet.\n\nVil du udføre en sikkerhedskopiering nu eller\nvente til det planlagte tidspunkt?\n\nNæste sikkerhedskopiering:  "
+  },
   "backupSettings": {
     "message": "Indstillinger for sikkerhedskopiering"
   },
+  "backupStartingIn.label": {
+    "message": "Sikkerhedskopieringen starter om 15 sekunder…"
+  },
   "backupTab": {
     "message": "Planlægning af sikkerhedskopiering"
+  },
+  "backupTime.label": {
+    "message": "Tidspunkt for sikkerhedskopiering"
   },
   "backupType": {
     "message": "Indhold af sikkerhedskopi"
@@ -499,6 +508,9 @@
   "formatWarningImport": {
     "message": "Hvis du bruger dette format, vil det ikke være muligt at importere de eksporterede meddelelser.\nVil du fortsætte?\n",
     "src": "mboximport"
+  },
+  "HeaderDateFormat.label": {
+    "message": "Datoformat for header"
   },
   "importDone": {
     "message": "Import færdig",

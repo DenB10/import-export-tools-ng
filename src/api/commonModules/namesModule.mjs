@@ -65,21 +65,31 @@ export var names = {
       subject = subject.substring(0, subjectMaxLen);
     }
 
-    // Author email
-    let authorEmail = parse5322.parseSender(expTask.msgList[index].author).address;
-    if (!authorEmail || authorEmail == "") {
-      authorEmail = "[No Author Email]";
-    }
-    // Author name
-    let authorName = parse5322.parseSender(expTask.msgList[index].author).name;
-    if (!authorName || authorName == "") {
-      // if no author name, check and substitute author email
-      if (authorEmail != "[No Author Email]") {
-        authorName = authorEmail;
-      } else {
-        authorName = "[No Author]";
+    let authorEmail;
+    let authorName;
+
+    // handle domainlessAuthor 
+    if (!expTask.msgList[index].author.includes('@') && (!author || author == "")) {
+      authorEmail = expTask.msgList[index].author;
+      authorName = expTask.msgList[index].author;
+    } else {
+      // Author email
+      authorEmail = parse5322.parseSender(expTask.msgList[index].author).address;
+      if (!authorEmail || authorEmail == "") {
+        authorEmail = "[No Author Email]";
+      }
+      // Author name
+      authorName = parse5322.parseSender(expTask.msgList[index].author).name;
+      if (!authorName || authorName == "") {
+        // if no author name, check and substitute author email
+        if (authorEmail != "[No Author Email]") {
+          authorName = authorEmail;
+        } else {
+          authorName = "[No Author]";
+        }
       }
     }
+
     authorName = authorName.slice(0, authorNameMaxLen);
     authorName = authorName.trimEnd();
 

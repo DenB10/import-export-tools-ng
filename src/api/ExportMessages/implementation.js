@@ -32,7 +32,7 @@ var { NetUtil } = ChromeUtils.importESModule(
 );
 
 var os = Services.appinfo.OS.toLowerCase();
-var osPathSeparator = os.includes("win")
+var osPathSeparator = os.includes("winnt")
   ? "\\"
   : "/";
 
@@ -121,6 +121,29 @@ var ExportMessages = class extends ExtensionCommon.ExtensionAPI {
           let containerName = `${expTask.folders[expTask.currentFolderIndex].name}_${dateStr}`;
           let uName = await IOUtils.createUniqueDirectory(expTask.generalConfig.exportDirectory, containerName);
           return uName;
+        },
+
+        convertHtmlToTextWithOptions: function (htmlToConvert) {
+          const ParserUtils = Cc["@mozilla.org/parserutils;1"].getService(
+            Ci.nsIParserUtils
+          );
+
+          let options = {};
+          options.flowed = true;
+          let wrapWidth = 0;
+          let flags =
+            Ci.nsIDocumentEncoder.OutputLFLineBreak |
+            Ci.nsIDocumentEncoder.OutputDisallowLineBreaking;
+
+          if (options?.flowed) {
+            wrapWidth = 72;
+            flags |=
+              Ci.nsIDocumentEncoder.OutputFormatted |
+              Ci.nsIDocumentEncoder.OutputFormatFlowed;
+          }
+
+          let res = ParserUtils.convertToPlainText(htmlToConvert, flags, wrapWidth).trim();
+          return res
         },
 
         openFileDialog: async function (mode, title, initialDir, filter) {

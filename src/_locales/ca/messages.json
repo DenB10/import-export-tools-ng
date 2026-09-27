@@ -59,11 +59,20 @@
   "backupOnExit": {
     "message": "Còpia de seguretat a la sortida"
   },
+  "backupOverdue.label": {
+    "message": "S&#39;ha endarrerit una còpia de seguretat.\n\nVoleu fer una còpia de seguretat ara o\nesperar fins a l&#39;hora programada?\n\nPròxima còpia de seguretat: "
+  },
   "backupSettings": {
     "message": "Paràmetres de la còpia de seguretat"
   },
+  "backupStartingIn.label": {
+    "message": "La còpia de seguretat començarà en 15 segons…"
+  },
   "backupTab": {
     "message": "Còpia de seguretat programada"
+  },
+  "backupTime.label": {
+    "message": "Temps de còpia de seguretat"
   },
   "backupType": {
     "message": "Fes còpia de seguretat de contingut"
@@ -500,6 +509,9 @@
   "formatWarningImport": {
     "message": "If you use this format, it will not be possible to import the exported messages.\nDo you want to continue?\n",
     "src": "mboximport"
+  },
+  "HeaderDateFormat.label": {
+    "message": "Format de data de capçalera"
   },
   "importDone": {
     "message": "Importació feta",

@@ -29,13 +29,19 @@ window.ietngAddon.ietngExtension = ExtensionParent.GlobalManager.getExtension(AD
 
 // Load notifyTools into a custom namespace, to prevent clashes with other add-ons.
 
-Services.scriptloader.loadSubScript(window.ietngAddon.ietngExtension.rootURI.resolve("chrome/content/mboximport/modules/notifyTools.js"), window.ietngAddon, "UTF-8");
+//Services.scriptloader.loadSubScript(window.ietngAddon.ietngExtension.rootURI.resolve("chrome/content/mboximport/modules/notifyTools.js"), window.ietngAddon, "UTF-8");
+Services.scriptloader.loadSubScript("resource://ietng/chrome/content/mboximport/modules/notifyTools.js", window.ietngAddon, "UTF-8");
+
 window.ietngAddon.extension = WL.extension;
 
 Services.scriptloader.loadSubScript("chrome://mboximport/content/mboximport/expMenuDispatcher.js", window, "UTF-8");
 Services.scriptloader.loadSubScript("chrome://mboximport/content/mboximport/wextAPICmds.js", window, "UTF-8");
 
-function onLoad() {
+var { IETStoragePrefs } = ChromeUtils.importESModule("chrome://mboximport/content/mboximport/modules/IETStoragePrefs.mjs?"
+	+ window.ietngAddon.extension.manifest.version + window.ietngAddon.dateForDebugging);
+
+
+async function onLoad() {
 	//console.debug('messenger OL');
 
 	WL.injectElements(`
@@ -72,27 +78,11 @@ function onLoad() {
 	window.ietng = {};
 	window.ietng.extension = WL.extension;
 
-	window.ietng.OpenBackupDialog = function (mode = "auto") {
-		Services.console.logStringMessage("IETNG: Start backup check");
-		let last = Services.prefs.getIntPref("extensions.importexporttoolsng.autobackup.last");
+	
+	window.ietng.OpenBackupDialog = async function (mode = "auto") {
+		
+		let last = await IETStoragePrefs.getIntPref("extensions.importexporttoolsng.autobackup.last");
 		let now = new Date();
-
-		// Abort in automode, if not yet due.
-		if (mode == "auto") {
-			let frequency = Services.prefs.getIntPref("extensions.importexporttoolsng.autobackup.frequency");
-			if (frequency === 0)
-				return;
-
-			if (frequency === 99)
-				frequency = 0.001;
-
-			let time = now.getTime() / 1000;
-			let days = 24 * 60 * 60 * frequency;
-
-			if ((time - last) < (days - (60 * 5))) {
-				return;
-			}
-		}
 
 		window.openDialog("chrome://mboximport/content/mboximport/autobackup.xhtml", "", "chrome,centerscreen,modal", last, now, mode);
 		return { status: "ok" };
@@ -234,7 +224,6 @@ function onLoad() {
 
 function onUnload() {
 	window.removeHotKeysObserver();
-	window.ietng.OpenBackupDialog();
 	window.ietngAddon.notifyTools.removeAllListeners();
 	delete window.ietngAddon;
 }

@@ -59,11 +59,20 @@
   "backupOnExit": {
     "message": "Ելքի պահուստավորում"
   },
+  "backupOverdue.label": {
+    "message": "Պահուստավորումը ժամկետանց է։\n\nՑանկանո՞ւմ եք հիմա կատարել պահուստավորում, թե՞ սպասել մինչև նշանակված ժամանակը։\n\nՀաջորդ պահուստավորումը՝ "
+  },
   "backupSettings": {
     "message": "Պահուստացման կարգավորումներ"
   },
+  "backupStartingIn.label": {
+    "message": "Պահուստավորումը կսկսվի 15 վայրկյանից…"
+  },
   "backupTab": {
     "message": "Պահուստի պլանավորում"
+  },
+  "backupTime.label": {
+    "message": "Պահուստավորման ժամանակը"
   },
   "backupType": {
     "message": "Պահուստի բով-ը"
@@ -499,6 +508,9 @@
   "formatWarningImport": {
     "message": "Այս ձևաչափը օգտագործելիս հնարավոր չէ ներմուծել արտածած հաղորդագրությունները։\nՇարունակե՞լ։\n",
     "src": "mboximport"
+  },
+  "HeaderDateFormat.label": {
+    "message": "Վերնագրի ամսաթվի ձևաչափը"
   },
   "importDone": {
     "message": "Ներմուծումն ավարտված է",

@@ -59,11 +59,20 @@
   "backupOnExit": {
     "message": "Varnostno kopiranje ob izhodu"
   },
+  "backupOverdue.label": {
+    "message": "Varnostno kopiranje je zamujalo.\n\nAli želite izvesti varnostno kopiranje zdaj ali\npočakati do načrtovanega časa?\n\nNaslednje varnostno kopiranje: "
+  },
   "backupSettings": {
     "message": "Nastavitve varnostnega kopiranja"
   },
+  "backupStartingIn.label": {
+    "message": "Varnostno kopiranje se bo začelo čez 15 sekund ..."
+  },
   "backupTab": {
     "message": "Varnostno kopiranje"
+  },
+  "backupTime.label": {
+    "message": "Čas varnostnega kopiranja"
   },
   "backupType": {
     "message": "Vsebina varnostne kopije"
@@ -499,6 +508,9 @@
   "formatWarningImport": {
     "message": "Če uporabite to obliko, izvoženih sporočil ne bo mogoče uvoziti.\nAli želite nadaljevati?",
     "src": "mboximport"
+  },
+  "HeaderDateFormat.label": {
+    "message": "Oblika datuma v glavi"
   },
   "importDone": {
     "message": "Uvoz končan",

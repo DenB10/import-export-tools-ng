@@ -1,0 +1,21 @@
+
+- New: Automatic, scheduled backups:
+  Run backups with no user interaction
+  Reminder at startup if backup overdue
+  Use 'backup' in logging options for trace
+  Note: Backup on exit removed. Not possible in
+   new architecture
+
+- New: Added message header date format option
+- Migrate legacy prefs to Local Storage
+- Fixed: Remove expStatusWin update causing error on 
+  Linux tiling compositors
+- Fixed: Save attachments when message has zero body length
+- Fixed: Index used wrong path separator on Darwin macOS
+- Fixed: Index date format missing hour
+- Updated: ScriptLoad with resource url
+
+- da locale update @Joergen
+- fr locale update @DenB10
+- full it locale update @topoldo
+- ja locale update @kiki-ja

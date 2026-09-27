@@ -59,11 +59,20 @@
   "backupOnExit": {
     "message": "終了時のバックアップ"
   },
+  "backupOverdue.label": {
+    "message": "バックアップの期限が過ぎています。\n\n今すぐバックアップを実行しますか、それとも予定時刻まで待ちますか？\n\n次回のバックアップ： "
+  },
   "backupSettings": {
     "message": "バックアップ設定"
   },
+  "backupStartingIn.label": {
+    "message": "バックアップは15秒後に開始されます…"
+  },
   "backupTab": {
     "message": "バックアップ"
+  },
+  "backupTime.label": {
+    "message": "バックアップ時間"
   },
   "backupType": {
     "message": "バックアップ種別"
@@ -499,6 +508,9 @@
   "formatWarningImport": {
     "message": "この形式を使用した場合は、エクスポートしたメッセージのインポートは可能にはなりません。\nこのまま続行しますか？",
     "src": "mboximport"
+  },
+  "HeaderDateFormat.label": {
+    "message": "ヘッダー日付形式"
   },
   "importDone": {
     "message": "インポートを完了しました",

@@ -59,11 +59,20 @@
   "backupOnExit": {
     "message": "Backup On Exit"
   },
+  "backupOverdue.label": {
+    "message": "A backup is overdue.\n\nWould you like to perform a backup now or\nwait until the scheduled time?\n\nNext backup: "
+  },
   "backupSettings": {
     "message": "Backup settings"
   },
+  "backupStartingIn.label": {
+    "message": "Backup will start in 15 seconds…"
+  },
   "backupTab": {
     "message": "Backup scheduling"
+  },
+  "backupTime.label": {
+    "message": "Backup time"
   },
   "backupType": {
     "message": "Backup content"
@@ -499,6 +508,9 @@
   "formatWarningImport": {
     "message": "If you use this format, it will not be possible to import the exported messages.\nAre you sure you want to continue?\n",
     "src": "mboximport"
+  },
+  "HeaderDateFormat.label": {
+    "message": "Header date format"
   },
   "importDone": {
     "message": "Import Done",

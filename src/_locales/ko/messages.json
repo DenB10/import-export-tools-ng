@@ -59,11 +59,20 @@
   "backupOnExit": {
     "message": "종료시 백업"
   },
+  "backupOverdue.label": {
+    "message": "백업 시간이 지났습니다.\n\n지금 백업을 수행하시겠습니까, 아니면\n예정된 시간까지 기다리시겠습니까?\n\n다음 백업: "
+  },
   "backupSettings": {
     "message": "백업 설정"
   },
+  "backupStartingIn.label": {
+    "message": "백업이 15초 후에 시작됩니다…"
+  },
   "backupTab": {
     "message": "백업 예약"
+  },
+  "backupTime.label": {
+    "message": "백업 시간"
   },
   "backupType": {
     "message": "백업 내용"
@@ -499,6 +508,9 @@
   "formatWarningImport": {
     "message": "If you use this format, it will not be possible to import the exported messages.\nDo you want to continue?\n",
     "src": "mboximport"
+  },
+  "HeaderDateFormat.label": {
+    "message": "헤더 날짜 형식"
   },
   "importDone": {
     "message": "가져오기 완료",

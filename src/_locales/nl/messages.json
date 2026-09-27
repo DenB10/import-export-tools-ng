@@ -59,11 +59,20 @@
   "backupOnExit": {
     "message": "Back-up bij afsluiten"
   },
+  "backupOverdue.label": {
+    "message": "Een back-up is te laat.\n\nWilt u nu een back-up maken of\nwachten tot het geplande tijdstip?\n\nVolgende back-up: "
+  },
   "backupSettings": {
     "message": "Back-upinstellingen"
   },
+  "backupStartingIn.label": {
+    "message": "De back-up start over 15 seconden…"
+  },
   "backupTab": {
     "message": "Back-upschema"
+  },
+  "backupTime.label": {
+    "message": "Back-uptijd"
   },
   "backupType": {
     "message": "Back-upinhoud"
@@ -499,6 +508,9 @@
   "formatWarningImport": {
     "message": "Als u deze indeling gebruikt, zult u de geëxporteerde berichten niet kunnen importeren.\nWilt u doorgaan?\n",
     "src": "mboximport"
+  },
+  "HeaderDateFormat.label": {
+    "message": "Datumindeling in de koptekst"
   },
   "importDone": {
     "message": "Importeren klaar",

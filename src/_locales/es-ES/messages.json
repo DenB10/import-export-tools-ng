@@ -59,11 +59,20 @@
   "backupOnExit": {
     "message": "Copia de seguridad al salir"
   },
+  "backupOverdue.label": {
+    "message": "Hay una copia de seguridad vencida.\n\n¿Desea realizar una copia de seguridad ahora o\nesperar hasta la hora programada?\n\nPróxima copia de seguridad: "
+  },
   "backupSettings": {
     "message": "Opciones de copia"
   },
+  "backupStartingIn.label": {
+    "message": "La copia de seguridad comenzará en 15 segundos…"
+  },
   "backupTab": {
     "message": "Programación de la copia"
+  },
+  "backupTime.label": {
+    "message": "Tiempo de respaldo"
   },
   "backupType": {
     "message": "Contenido de la copia"
@@ -499,6 +508,9 @@
   "formatWarningImport": {
     "message": "If you use this format, it will not be possible to import the exported messages.\nDo you want to continue?\n",
     "src": "mboximport"
+  },
+  "HeaderDateFormat.label": {
+    "message": "Formato de fecha del encabezado"
   },
   "importDone": {
     "message": "Importar Hecho",
