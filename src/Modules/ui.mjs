@@ -17,10 +17,19 @@
 // tbd - move notifications here
 
 export async function createExportStatusWindow(title, winType) {
+  // same size for now, may tweak later
+  let expStatusWinHeight = 280;
+  let expStatusMultipleWinHeight = 380;
+
+  if (!navigator.userAgent.includes("Windows")) {
+    expStatusWinHeight = 280;
+    expStatusMultipleWinHeight = 380;
+  }
+
   if (winType == "singleFolder") {
-    await browser.windows.create({ url: "/UI/expStatus.html", titlePreface: title, type: "popup", width: 545, height: 295 });
+    await browser.windows.create({ url: "/UI/expStatus.html", titlePreface: title, type: "popup", width: 545, height: expStatusWinHeight });
   } else {
-    await browser.windows.create({ url: "/UI/expStatusMultiFolder.html", titlePreface: title, type: "popup", width: 545, height: 396 });
+    await browser.windows.create({ url: "/UI/expStatusMultiFolder.html", titlePreface: title, type: "popup", width: 545, height: expStatusMultipleWinHeight });
   }
 
 }

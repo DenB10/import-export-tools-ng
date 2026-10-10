@@ -20,11 +20,9 @@ import { openHelp } from "/Modules/miscCmds.mjs";
 import * as prefMgmt from "/Modules/prefMgmt.mjs";
 import { prefCmds } from "./Modules/prefCmds.mjs";
 import * as autoBackup from "./Modules/autoBackup.mjs";
-
+import { MutexAsync } from "./Modules/mutex-async.mjs";
 import "/Modules/menus.mjs";
 import "/Modules/wextAPI.mjs";
-
-//window.gBt = "none bk";
 
 // now start
 main();
@@ -87,8 +85,10 @@ async function main() {
 	messenger.WindowListener.startListening();
 
 	// autoBackup
-	//gBt = await prefCmds.getPref("autobackup.temp.backupTime")
-	//console.log("gBt get", gBt)
-
 	await autoBackup.initBackupScheduler();
+
+	// create a global preference mutex to be used by prefCmds
+	window.gPrefsMutex = new MutexAsync({ warnOnOverlap: true });
+	var varTest = 99099;
+	window.setTest = 59;
 }

@@ -173,6 +173,9 @@
   "ctxMenu_Help.title": {
     "message": "Pomoc"
   },
+  "ctxMenu_Options_Editor.title": {
+    "message": "Edytor opcji"
+  },
   "ctxMenu_Options.title": {
     "message": "Opcje"
   },
@@ -803,9 +806,18 @@
   "newFilesMode": {
     "message": "tylko pliki zmienione od czasu ostatniej kopii"
   },
+  "NoAuthor.msg": {
+    "message": "Brak autora"
+  },
+  "NoAuthorEmail.msg": {
+    "message": "Brak adresu e-mail autora"
+  },
   "noBackup": {
     "message": "Nie udało się wykonać kopii zapasowej. Sprawdź ścieżkę i uprawnienia do katalogu docelowego.",
     "src": "autobackup"
+  },
+  "NoDecryption.msg": {
+    "message": "Brak odszyfrowywania"
   },
   "noEML": {
     "message": "Nie znaleziono pliku eml w tym katalogu",
@@ -854,9 +866,18 @@
     "message": "This folder doesn't contain a valid profile",
     "src": "profilewizard"
   },
+  "NoRecipient.msg": {
+    "message": "Brak odbiorcy"
+  },
+  "NoRecipientEmail.msg": {
+    "message": "Brak adresu e-mail odbiorcy"
+  },
   "noRemoteExport": {
     "message": "Nie udało się wyeksportować tego folderu, ponieważ nie jest dostępny.",
     "src": "mboximport"
+  },
+  "NoSubject.msg": {
+    "message": "Brak tematu"
   },
   "nosubjectmsg": {
     "message": "bez_tematu",

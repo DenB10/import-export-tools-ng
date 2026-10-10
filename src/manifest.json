@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "__MSG_extensionName__",
-  "version": "15.0.4-b1",
+  "version": "15.0.4-b3",
   "description": "__MSG_extensionDescription__",
   "author": "Christopher Leidigh",
   "applications": {
@@ -12,6 +12,7 @@
     }
   },
   "browser_action": {
+		"type":"menu",
     "default_icon": "chrome/content/mboximport/icons/import-export-tools-ng-icon-64px.png",
     "default_title": "ImportExport"
   },
@@ -101,7 +102,6 @@
   "content_security_policy": "script-src 'self'; object-src 'self';",
   "permissions": [
     "menus",
-    "activeTab",
     "messagesRead",
     "tabs",
     "accountsFolders",

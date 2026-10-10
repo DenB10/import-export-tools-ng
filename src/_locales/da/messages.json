@@ -173,6 +173,9 @@
   "ctxMenu_Help.title": {
     "message": "Hjælp"
   },
+  "ctxMenu_Options_Editor.title": {
+    "message": "Indstillingsredigering"
+  },
   "ctxMenu_Options.title": {
     "message": "Indstillinger"
   },
@@ -803,9 +806,18 @@
   "newFilesMode": {
     "message": "Kun filer der er ændret siden seneste sikkerhedskopi"
   },
+  "NoAuthor.msg": {
+    "message": "Ingen afsender"
+  },
+  "NoAuthorEmail.msg": {
+    "message": "Ingen mailadresse for afsender]"
+  },
   "noBackup": {
     "message": "Kunne ikke tage sikkerhedskopier: Undersøg destinationsmappes sti og og tilladelser",
     "src": "autobackup"
+  },
+  "NoDecryption.msg": {
+    "message": "Ingen kryptering"
   },
   "noEML": {
     "message": "Der blev ikke fundet nogen eml-fil i denne mappe",
@@ -854,9 +866,18 @@
     "message": "Denne mappe indeholder ikke en gyldig profil",
     "src": "profilewizard"
   },
+  "NoRecipient.msg": {
+    "message": "Ingen modtager"
+  },
+  "NoRecipientEmail.msg": {
+    "message": "Ingen mailadresse for modtager]"
+  },
   "noRemoteExport": {
     "message": "Kunne ikke eksportere denne fjernmappe da den ikke er online.",
     "src": "mboximport"
+  },
+  "NoSubject.msg": {
+    "message": "Intet emne"
   },
   "nosubjectmsg": {
     "message": "intet_emne",

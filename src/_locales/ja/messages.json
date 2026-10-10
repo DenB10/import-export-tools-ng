@@ -173,6 +173,9 @@
   "ctxMenu_Help.title": {
     "message": "ヘルプ"
   },
+  "ctxMenu_Options_Editor.title": {
+    "message": "オプションエディター"
+  },
   "ctxMenu_Options.title": {
     "message": "設定"
   },
@@ -803,9 +806,18 @@
   "newFilesMode": {
     "message": "最後のバックアップ以降に変更されたファイルのみ"
   },
+  "NoAuthor.msg": {
+    "message": "差出人なし"
+  },
+  "NoAuthorEmail.msg": {
+    "message": "差出人メールアドレスなし"
+  },
   "noBackup": {
     "message": "バックアップを実行できません：コピー先のフォルダーの場所とアクセス権限を確認してください。",
     "src": "autobackup"
+  },
+  "NoDecryption.msg": {
+    "message": "復号なし"
   },
   "noEML": {
     "message": "このフォルダーには EML ファイルがありませんでした",
@@ -854,9 +866,18 @@
     "message": "このフォルダーには、正常なプロファイルがありません。",
     "src": "profilewizard"
   },
+  "NoRecipient.msg": {
+    "message": "受信者なし"
+  },
+  "NoRecipientEmail.msg": {
+    "message": "受信者メールアドレスなし"
+  },
   "noRemoteExport": {
     "message": "オンライン状態ではないので、このリモートフォルダーをエクスポートすることができません。",
     "src": "mboximport"
+  },
+  "NoSubject.msg": {
+    "message": "件名なし"
   },
   "nosubjectmsg": {
     "message": "件名なし",

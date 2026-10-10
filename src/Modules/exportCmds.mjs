@@ -1113,7 +1113,7 @@ async function _insertHdrTable(expTask, msg, msgBody, msgBodyType, extraHeaders)
 
 
   if (expTask.expType == "html") {
-    let subjectHTML = _encodeSpecialTextToHTML(extraHeaders.fullSubject);
+    let subjectHTML = _encodeSpecialTextToHTML(extraHeaders.fullSubject || "[No Subject]");
     let dateHTML = _encodeSpecialTextToHTML(date);
     let authorHTML = _encodeSpecialTextToHTML(author);
     let recipientsHTML = _encodeSpecialTextToHTML(recipients);
@@ -1158,7 +1158,7 @@ async function _insertHdrTable(expTask, msg, msgBody, msgBodyType, extraHeaders)
   // plaintext export
 
   let hdr = "";
-  hdr += `${hdrSubject}:  ${extraHeaders.fullSubject}\r\n`;
+  hdr += `${hdrSubject}:  ${extraHeaders.fullSubject || "[No Subject]"}\r\n`;
   hdr += `${hdrFrom}:  ${author}\r\n`;
   hdr += `${hdrTo}:  ${recipients}\r\n`;
   hdr += `${hdrDate}:  ${date}\r\n`;
@@ -1231,6 +1231,11 @@ async function _createIndex(expTask, msgListLog) {
     const dateHdr = browser.i18n.getMessage("msgHdr.Date");
     const sizeStr = browser.i18n.getMessage("Size");
     const folderStr = browser.i18n.getMessage("Folder.label");
+    const NoSubjectStr = browser.i18n.getMessage("NoSubject.msg");
+    const NoDecryptionStr = browser.i18n.getMessage("NoDecryption.msg");
+    const NoAuthorStr = browser.i18n.getMessage("NoAuthor.msg");
+    const NoRecipientStr = browser.i18n.getMessage("NoRecipient.msg");
+
 
     let indexData = "";
     let titleDate = strftime.strftime(expTask.index.dateFormat, new Date());
@@ -1238,6 +1243,7 @@ async function _createIndex(expTask, msgListLog) {
     let styles = '<style>\r\n';
     styles += 'table { border-collapse: collapse; }\r\n';
     styles += `table.sortable th::after, th.sorttable_sorted::after, th.sorttable_sorted_reverse::after { content: " ";  display: inline-block; width: 20px;  height: 16px;}`;
+    //styles += `table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { content: " \\25B4\\25BE" }`;
     styles += `th.sorttable_sorted::after { background: no-repeat url(${downArrowIcon}); background-size: 80%; float: right; padding-bottom: -8px}`;
     styles += `th.sorttable_sorted_reverse::after { background: no-repeat url(${upArrowIcon}); background-size: 80%; float: right}`;
     styles += `#sorttable_sortfwdind, #sorttable_sortrevind { display: none; }`;
@@ -1246,8 +1252,10 @@ async function _createIndex(expTask, msgListLog) {
     styles += 'th, td { padding: 4px; text-align: left; vertical-align: center; }\r\n';
     styles += 'tr:nth-child(even) { background-color: #f0f0f0; }\r\n';
     styles += 'tr:nth-child(odd) { background-color: #fff; }\r\n';
-    styles += 'tr>:nth-child(5) { text-align: center; }\r\n';
+    styles += 'tr>:nth-child(5) { text-align: center; padding-right: 0px;}\r\n';
     styles += 'tr>:nth-child(6) { text-align: right; }\r\n';
+    styles += 'th:first-child, td:first-child  { width: 350px; min-width: 350px; max-width: 350px; overflow-wrap: break-word;}\r\n';
+
     styles += '.msgError { background-color: red !important; color: white;}\r\n';
     styles += 'a:link { text-decoration: none;}\n';
     styles += '.msgError a:link { color:rgb(198, 198, 230);}\n';
@@ -1261,14 +1269,14 @@ async function _createIndex(expTask, msgListLog) {
     indexData += `<title>${folderStr} : ${expTask.folders[expTask.currentFolderIndex].name}</title>\n</head>\n<body>\n`;
     indexData += `<h2>${folderStr} : ${expTask.folders[expTask.currentFolderIndex].name}&nbsp;&nbsp;&nbsp;&nbsp;${dateHdr} : ${titleDate}</h2>\n`;
 
-    indexData += '<table width="99%" border="1" class="sortable">\n';
+    indexData += '<table width="99%" border="1" class="sortable" style2="table-layout: fixed">\n';
 
-    indexData += "<tr><th><b>" + subjectHdr + "</b></th>"; // Subject
+    indexData += "<tr><th style=''><b>" + subjectHdr + "</b></th>"; // Subject
     indexData += "<th><b>" + fromHdr + "</b></th>"; // From
     indexData += "<th><b>" + toHdr + "</b></th>"; // To
     indexData += "<th id='dateHdr'><b>" + dateHdr + "</b></th>"; // Date
 
-    indexData += "<th style='padding-left: 12px;' class='sorttable_nosort' ><b>" + "<img src='" + attIcon + "' height='20px' width='20px'></b></th>"; // Attachment
+    indexData += "<th style='padding-left: 14px; ' class='sorttable_nosort' >" + "<img src='" + attIcon + "' height='18px' width='18px'></th>"; // Attachment
 
     indexData += "<th><b>" + sizeStr + "</b></th>"; // Attachment
 
@@ -1285,9 +1293,16 @@ async function _createIndex(expTask, msgListLog) {
         errClass = " class='msgError' ";
       }
 
+      let author;
+      if (msgItem.headers.author == "" || !msgItem.headers.author) {
+        author = `[${NoAuthorStr}]`;
+      } else {
+        author = msgItem.headers.author;
+      }
+
       let recipients;
-      if (msgItem.headers.recipients == []) {
-        recipients = "(none)";
+      if (msgItem.headers.recipients == [] || msgItem.headers.recipients == "") {
+        recipients = `[${NoRecipientStr}]`;
       } else {
         recipients = msgItem.headers.recipients.map(recipient => {
           recipient = recipient.slice(0, 50)
@@ -1317,17 +1332,23 @@ async function _createIndex(expTask, msgListLog) {
       }
 
       let fullSubject = msgItem.headers.subject;
-      if (fullSubject.startsWith(".")) {
-        fullSubject = "[No Decryption]" + fullSubject;
+      // tbd, should be done with flag
+      if (fullSubject == "...") {
+        fullSubject = `[${NoDecryptionStr}]` + fullSubject;
       }
-      let aHref = `<a href="${relUrl}">${_encodeSpecialTextToHTML(fullSubject).slice(0, 50)}</a>`;
+      
+      if (!fullSubject || fullSubject == "") {
+        fullSubject = `[${NoSubjectStr}]`;
+      }
+
+      let aHref = `<a href="${relUrl}">${_encodeSpecialTextToHTML(fullSubject)}</a>`;
 
       let attachments = "";
       if (msgItem.hasAttachments) {
         attachments = msgItem.hasAttachments;
       }
-      indexData += `\n<tr ${errClass}><td width="18%" sorttable_customkey="${fullSubject}">${aHref}</td>`;
-      indexData += "\n<td>" + _encodeSpecialTextToHTML(msgItem.headers.author.slice(0, 50).replaceAll('"', '')) + "</td>";
+      indexData += `\n<tr ${errClass}><td sorttable_customkey="${fullSubject}">${aHref}</td>`;
+      indexData += "\n<td>" + _encodeSpecialTextToHTML(author.slice(0, 50).replaceAll('"', '')) + "</td>";
       indexData += "\n<td>" + recipients + "</td>";
       indexData += `\n<td style='text-align: right;' sorttable_customkey="${strftime.strftime("%s", msgItem.headers.date)}" nowrap>${strftime.strftime(expTask.index.dateFormat, msgItem.headers.date)}</td>`;
       indexData += "\n<td>" + attachments + "</td>";

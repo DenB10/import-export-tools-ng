@@ -89,7 +89,9 @@ export var prefCmds = {
 
   // Set pref value by updating local pref obj and updating storage.
   setPref: async function (aName, aValue, forceUserPref = false) {
-    //console.log(aName, aValue)
+
+    // use global pref mutex to make _userPrefs and local storage userPrefs writes atomic
+    let unlock = await window.gPrefsMutex.lock();
 
     if (!this.dotHasOwnProperty(aName, this._defaultPrefs)) {
       console.error("IETNG: Error setting userPref, userPref does not exist in defaultPrefs", aName);
@@ -106,6 +108,10 @@ export var prefCmds = {
     this.dotSet(aName, aValue, this._userPrefs, true);
     // store updated userPrefs in storage
     await messenger.storage[userPrefStorageArea].set({ userPrefs: this._userPrefs });
+
+    // unlock mutex
+    await unlock();
+
     log("prefs1", `setPref: ${aName} userPref: ${aValue}`);
     return aValue;
   },
@@ -143,7 +149,31 @@ export var prefCmds = {
 
     logging.init({ logTypes: this.getPref("debug.logTypes") });
 
+    // Add storage change listener.
+    if (!(await messenger.storage.onChanged.hasListener(this.storageChanged))) {
+      await messenger.storage.onChanged.addListener(this.storageChanged);
+    }
+
+
     return initialStorageDefaults;
+  },
+
+  update_userPrefsFromLocalStorage: async function (topKey, newValue) {
+    
+
+    // use global pref mutex to make _userPrefs and local storage userPrefs writes atomic
+    let unlock = await (await browser.runtime.getBackgroundPage()).gPrefsMutex.lock();
+    await messenger.storage[userPrefStorageArea].set({ [topKey]: newValue });
+
+    // Store user prefs into the local userPrefs obj.
+    let t1 = (await messenger.storage[userPrefStorageArea].get("userPrefs")).userPrefs || {};
+    console.log(t1)
+     t1 = (await messenger.storage[userPrefStorageArea].get("userPrefs"));
+    console.log(t1)
+    console.log(this._userPrefs)
+
+    this._userPrefs = (await messenger.storage[userPrefStorageArea].get("userPrefs")).userPrefs || {};
+    await unlock();
   },
 
   dotGet: function (str, obj) {
@@ -190,7 +220,24 @@ export var prefCmds = {
       return true;
     }
     return false;
-  }
+  },
+
+  // Listener for storage changes.
+  storageChanged: function (changes, area) {
+    let changedItems = Object.keys(changes);
+    for (let item of changedItems) {
+      if (area == userPrefStorageArea && item == "userPrefs") {
+        prefCmds._userPrefs = changes.userPrefs.newValue;
+        console.log("storage change", prefCmds._userPrefs)
+      }
+
+      if (area == "local" && item == "defaultPrefs") {
+        this._defaultPrefs = changes.defaultPrefs.newValue;
+      }
+    }
+  },
+
+
 
 }
 
